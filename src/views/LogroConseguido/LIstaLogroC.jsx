@@ -6,19 +6,19 @@ import Cookies from 'universal-cookie';
 import Nav from '../../Components/Nav';
 import { Container, Row, Col, Form, Table, FormGroup, Label, Input, Button } from "reactstrap";
 
-function ListaInsumoR() {
-  const go = useNavigate();
+function LIstaLogroC() {
+    const go = useNavigate();
    const cookies = new Cookies();
-   const [inr, setInr]=useState([]);
-   const obtenerInr = async()=>{
-    const response = await fetch(`${appsettings.apiUrl}InsumoRequerido`)
+   const [logc, setLogc]=useState([]);
+   const obtenerLog = async()=>{
+    const response = await fetch(`${appsettings.apiUrl}LogroConseguido`)
     if(response.ok){
       const data = await response.json()
-      setInr(data);
+      setLogc(data);
     }
   }
   useEffect(()=>{
-    obtenerInr()
+    obtenerLog()
       if(!cookies.get('id')){
           go('/')
       }
@@ -27,7 +27,7 @@ function ListaInsumoR() {
         const Eliminar = (id) =>{
           Swal.fire({
             title: "¿Esta seguro?",
-            text: "Eliminar Insumo Requerido",
+            text: "Eliminar Logro Conseguido",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -36,28 +36,29 @@ function ListaInsumoR() {
           }).then(async(result) => {
   
             if (result.isConfirmed) {
-              const response = await fetch(`${appsettings.apiUrl}InsumoRequerido/${id}`, {method:"DELETE"});
+              const response = await fetch(`${appsettings.apiUrl}LogroConseguido/${id}`, {method:"DELETE"});
                 if (response.ok) {
-                  await obtenerInr()
+                  await obtenerLog()
                 }
             }
           });
         }
-  return ( 
+  return (
     <div>
         <Nav/>
         <Container className="mt-5">
             <Row>
                 <Col sm={{size:8,offset:2}}>
-                    <h4>Lista de Insumos Requeridos</h4>
+                    <h4>Lista de Logros Conseguidos</h4>
                     <hr/>
-                    <Link className="btn btn-success mb-3" to="/Crearinr">Nuevo Insumo Requeridos</Link>
+                    <Link className="btn btn-success mb-3" to="/Crearlogroc">Nuevo Logro Conseguido</Link>
                     <Table bordered>
                       <thead>
                         <tr>
-                            <th>Insumo</th>
-                            <th>Procedimiento</th>
-                            <th>Cantidad</th>
+                            <th>Partida</th>
+                            <th>Logro</th>
+                            <th>Fecha Logro</th>
+                            
 
                             <th></th>
                             <th></th>
@@ -65,17 +66,18 @@ function ListaInsumoR() {
                       </thead>
                       <tbody>
                         {
-                          inr.map((item)=>(
-                            <tr key={item.idInRe}>
-                              <td>{item.insumos.nombreInsumo}</td>
-                              <td>ID: {item.procedimento.idProcedimiento} Descripción: {item.procedimento.descripcion}</td>
-                              <td>{item.cantidad}</td>
+                          logc.map((item)=>(
+                            <tr key={item.idLogCon}>
+                              <td>ID Usuario: {item.partida.idUsuarioFK} Fecha Inciao {item.partida.fechaInicio}</td>
+                              <td>{item.logro.nombreLogro}</td>
+                              <td>{item.fechaLogro}</td>
+                              
                               <td>
-                              <Link className="btn btn-primary me-2" to={`/Editarinr/${item.idInRe}`}><i className="fa-solid fa-edit"></i></Link>
+                              <Link className="btn btn-primary me-2" to={`/Editarlogroc/${item.idLogCon}`}><i className="fa-solid fa-edit"></i></Link>
                               
                               </td>
                               <td>
-                              <Button color="danger" onClick={()=> {Eliminar(item.idInRe)}}>
+                              <Button color="danger" onClick={()=> {Eliminar(item.idLogCon)}}>
                               <i className="fa-solid fa-trash"></i>
                               </Button>
                               </td>
@@ -92,4 +94,4 @@ function ListaInsumoR() {
   )
 }
 
-export default ListaInsumoR
+export default LIstaLogroC
